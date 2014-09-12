@@ -1,0 +1,10 @@
+predflex.cpp
+predgram.tab.cpp
+rulesflex.cpp
+rulesgram.tab.cpp
+assocgram.tab.h
+shapegram.tab.h
+assocflex.cpp
+assocgram.tab.cpp
+shapeflex.cpp
+shapegram.tab.cpp

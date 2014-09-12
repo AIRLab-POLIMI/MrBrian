@@ -28,7 +28,7 @@ aggregation_tree *ptrule=NULL;
   operation * op;
 }
 
-%type <op> predexpr
+%type <op> predexpr andexprlist orexprlist
 %type <dataname> name
 %token <dataname> NAME
 %token LEFTPAR
@@ -59,10 +59,19 @@ precond: predexpr       {ptrule->set_pTerm($1);}
          ;
 
 predexpr: LEFTPAR NOT predexpr RIGHTPAR         {$$=new op_not($3);}
-        | LEFTPAR AND predexpr predexpr RIGHTPAR    {$$=new op_and($3,$4);}
-        | LEFTPAR OR predexpr predexpr RIGHTPAR {$$=new op_or($3,$4);}
+        | LEFTPAR AND andexprlist RIGHTPAR    {$$=$3;}
+        | LEFTPAR OR orexprlist RIGHTPAR {$$=$3;}
         | LEFTPAR name RIGHTPAR       {$$=new predicate_node($2); free($2);}
 	;
+	
+andexprlist: predexpr andexprlist {$$= new op_and($1, $2);}
+           | predexpr predexpr {$$= new op_and($1, $2);}
+           ;
+           
+orexprlist: predexpr orexprlist {$$= new op_or($1, $2);}
+          | predexpr predexpr {$$= new op_or($1, $2);}
+          ;
+
 
 actions: LEFTPAR name name RIGHTPAR endlist        {actuallist->add(new proposed_action($2,$3,"noname"));
                                                       free($2);

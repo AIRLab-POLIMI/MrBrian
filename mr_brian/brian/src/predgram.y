@@ -18,7 +18,7 @@ aggr_tree_multimap *pt=NULL;
 }
 
 %type <dataname> name
-%type <op> operator
+%type <op> operator andexprlist orexprlist
 %token <dataname> NAME
 %token LEFTPAR
 %token RIGHTPAR
@@ -44,12 +44,20 @@ predicates: pred NEWLINE predicates
 pred: name DEF operator      {pt->insert(pair < char *, aggregation_tree *> ($1, new aggregation_tree($1,$3)));}
     ;
 
-operator: LEFTPAR AND operator operator RIGHTPAR  {$$=new op_and($3,$4);}
-        | LEFTPAR OR operator operator RIGHTPAR   {$$=new op_or($3,$4);}
+operator: LEFTPAR AND andexprlist RIGHTPAR  {$$=$3;}
+        | LEFTPAR OR orexprlist RIGHTPAR   {$$=$3;}
         | LEFTPAR NOT operator RIGHTPAR           {$$=new op_not($3);}
         | LEFTPAR D name name RIGHTPAR              {$$=new data_node($3,$4); free($3); free($4);}
         | LEFTPAR P name RIGHTPAR                   {$$=new predicate_node($3); free($3);}
         ;
+        
+andexprlist: operator andexprlist {$$= new op_and($1, $2);}
+           | operator operator {$$= new op_and($1, $2);}
+           ;
+           
+orexprlist: operator orexprlist {$$= new op_or($1, $2);}
+          | operator operator {$$= new op_or($1, $2);}
+          ;
 
 name: NAME  {$$=(char *) malloc(strlen($1)+1);
              strcpy($$,$1);}
