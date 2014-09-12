@@ -8,3 +8,8 @@ assocflex.cpp
 assocgram.tab.cpp
 shapeflex.cpp
 shapegram.tab.cpp
+predgram.tab.h
+rulesgram.tab.h
+assflex.cpp
+assgram.tab.cpp
+assgram.tab.h
