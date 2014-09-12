@@ -57,10 +57,18 @@ metaprecond: metapredexpr
         ;
 
 predexpr: LEFTPAR NOT predexpr RIGHTPAR
-          | LEFTPAR AND predexpr predexpr RIGHTPAR
-          | LEFTPAR OR predexpr predexpr RIGHTPAR
+          | LEFTPAR AND andexprlist RIGHTPAR
+          | LEFTPAR OR orexprlist RIGHTPAR
           | LEFTPAR name RIGHTPAR       {pred_exists($2);}
 	  ;
+	  
+andexprlist: predexpr andexprlist
+           | predexpr predexpr
+           ;
+           
+orexprlist: predexpr orexprlist 
+          | predexpr predexpr
+          ;
 
 metapredexpr: LEFTPAR NOT metapredexpr RIGHTPAR
                 | LEFTPAR AND metapredexpr metapredexpr RIGHTPAR

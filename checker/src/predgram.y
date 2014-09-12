@@ -48,12 +48,20 @@ predicates: pred NEWLINE predicates
 pred: name DEF operator              {addpred($1);}
     ;
 
-operator: LEFTPAR AND operator operator RIGHTPAR
-        | LEFTPAR OR operator operator RIGHTPAR
+operator: LEFTPAR AND andexprlist RIGHTPAR
+        | LEFTPAR OR orexprlist RIGHTPAR
         | LEFTPAR NOT operator RIGHTPAR
         | LEFTPAR D name name RIGHTPAR              {data_exists($3,$4);}
         | LEFTPAR P name RIGHTPAR                         {pred_exists($3);}
         ;
+        
+andexprlist: operator andexprlist 
+           | operator operator 
+           ;
+           
+orexprlist: operator orexprlist
+          | operator operator
+          ;
 
 name: NAME  {$$=(char *) malloc(strlen($1)+1);
              strcpy($$,$1);}
