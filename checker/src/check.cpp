@@ -379,7 +379,7 @@ int main(int argc, char ** argv)
     }
   else
   {
-    strcpy(basepath,"../config/"); 
+    basepath = strdup("./"); 
   }
 
   linenum=1;
@@ -551,4 +551,6 @@ int main(int argc, char ** argv)
 	cout << *i << " non trovato!\n";
       i++;
     }
+    
+    free(basepath);
 }
